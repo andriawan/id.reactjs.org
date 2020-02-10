@@ -26,7 +26,7 @@ Pada dokumen ini, kita akan mendiskusikan mengapa _higher-order components_ berm
 
 Komponen merupakan unit utama dari penggunaan ulang kode di React. Namun, Anda akan menemukan bahwa beberapa pola tidak cocok untuk komponen tradisional.
 
-Contohnya, Anda memiliki komponen `CommentList` yang berlangganan ke sumber data eksternal untuk me-_render_ dafar komentar:
+Contohnya, Anda memiliki komponen `CommentList` yang berlangganan ke sumber data eksternal untuk me-_render_ daftar komentar:
 
 ```js
 class CommentList extends React.Component {
@@ -163,7 +163,7 @@ function withSubscription(WrappedComponent, selectData) {
 }
 ```
 
-Note that a HOC doesn't modify the input component, nor does it use inheritance to copy its behavior. Rather, a HOC *composes* the original component by *wrapping* it in a container component. A HOC is a pure function with zero side-effects.
+Catat bahwa sebuah HOC tidak mengubah komponen _input_, tidak pula menggunakan _inheritance_ untuk menyalin perilakunya. Sebaliknya, sebuah HOC *menyusun* komponen asli dengan cara *membungkusnya* ke dalam sebuah _container_. Sebuah HOC merupakan fungsi murni bebas dari _side-effects_.
 
 And that's it! The wrapped component receives all the props of the container, along with a new prop, `data`, which it uses to render its output. The HOC isn't concerned with how or why the data is used, and the wrapped component isn't concerned with where the data came from.
 
