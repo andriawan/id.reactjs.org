@@ -4,29 +4,29 @@ title: Higher-Order Components
 permalink: docs/higher-order-components.html
 ---
 
-A higher-order component (HOC) is an advanced technique in React for reusing component logic. HOCs are not part of the React API, per se. They are a pattern that emerges from React's compositional nature.
+_Higher-order component_ (HOC) merupakan teknik lanjutan dalam React untuk menggunakan kembali logika komponen. HOCs sendiri bukan merupakan bagian dari API React. Hal tersebut merupakan pola yang muncul dari sifat komposisi React.
 
-Concretely, **a higher-order component is a function that takes a component and returns a new component.**
+Konkritnya, **_higher-order component_ merupakan fungsi yang mengambil sebuah komponen dan mengembalikan sebuah komponen baru**
 
 ```js
 const EnhancedComponent = higherOrderComponent(WrappedComponent);
 ```
 
-Whereas a component transforms props into UI, a higher-order component transforms a component into another component.
+Sebaliknya saat sebuah komponen mengubah _props_ menjadi UI, _higher-order component_ mengubah sebuah komponen menjadi komponen yang lainnya.
 
-HOCs are common in third-party React libraries, such as Redux's [`connect`](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect) and Relay's [`createFragmentContainer`](http://facebook.github.io/relay/docs/en/fragment-container.html).
+HOCs umum di pakai pustaka pihak ketiga React, seperti Redux's [`connect`](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect) dan Relay's [`createFragmentContainer`](http://facebook.github.io/relay/docs/en/fragment-container.html).
 
-In this document, we'll discuss why higher-order components are useful, and how to write your own.
+Pada dokumen ini, kita akan mendiskusikan mengapa _higher-order components_ bermanfaat dan bagaimana menulis _higher-order components_ anda sendiri.
 
-## Use HOCs For Cross-Cutting Concerns {#use-hocs-for-cross-cutting-concerns}
+## Penggunaan HOCs untuk Cross-Cutting Concerns {#use-hocs-for-cross-cutting-concerns}
 
-> **Note**
+> **Catatan**
 >
-> We previously recommended mixins as a way to handle cross-cutting concerns. We've since realized that mixins create more trouble than they are worth. [Read more](/blog/2016/07/13/mixins-considered-harmful.html) about why we've moved away from mixins and how you can transition your existing components.
+> Kita sebelumnya merekomendasikan _mixins_ sebagai cara menangani _cross-cutting concerns_. Kita telah menyadari bahwa _mixins_ menimbulkan lebih banyak masalah daripada keuntungan. [Baca detail](/blog/2016/07/13/mixins-considered-harmful.html) tentang mengapa kita beralih dari _mixins_ dan bagaimana Anda dapat mentransisikan komponen yang ada.
 
-Components are the primary unit of code reuse in React. However, you'll find that some patterns aren't a straightforward fit for traditional components.
+Komponen merupakan unit utama dari penggunaan ulang kode di React. Namun, Anda akan menemukan bahwa beberapa pola tidak cocok untuk komponen tradisional.
 
-For example, say you have a `CommentList` component that subscribes to an external data source to render a list of comments:
+Contohnya, Anda memiliki komponen `CommentList` yang berlangganan ke sumber data eksternal untuk me-_render_ dafar komentar:
 
 ```js
 class CommentList extends React.Component {
@@ -68,7 +68,7 @@ class CommentList extends React.Component {
 }
 ```
 
-Later, you write a component for subscribing to a single blog post, which follows a similar pattern:
+Kemudian, Anda menulis sebuah komponen untuk berlangganan ke posting blog yang mengikuti pola yang sama:
 
 ```js
 class BlogPost extends React.Component {
@@ -100,15 +100,15 @@ class BlogPost extends React.Component {
 }
 ```
 
-`CommentList` and `BlogPost` aren't identical — they call different methods on `DataSource`, and they render different output. But much of their implementation is the same:
+`CommentList` dan `BlogPost` tidaklah sama — Keduanya memanggil metode yang berbeda `DataSource`, dan keduanya me-_render_ keluaran yang berbeda. Namun, implementasinya kebanyakan sama:
 
-- On mount, add a change listener to `DataSource`.
-- Inside the listener, call `setState` whenever the data source changes.
-- On unmount, remove the change listener.
+- Saat dilakukan _mount_, tambah _change listener_ ke `DataSource`.
+- Di dalam _listener_, panggil `setState` pada saat  sumber data berubah.
+- Saat dilakukan _unmount_, hapus _change listener_.
 
-You can imagine that in a large app, this same pattern of subscribing to `DataSource` and calling `setState` will occur over and over again. We want an abstraction that allows us to define this logic in a single place and share it across many components. This is where higher-order components excel.
+Anda dapat bayangkan bahwa dalam aplikasi berskala besar, pola yang sama pada proses berlangganan `DataSource` dan pemanggilan `setState` akan terjadi berulang kali. Kita ingin sebuah abstraksi yang mengizinkan kita mendefinisikan logika ini pada satu tempat dan membaginya antar komponen. Dalam kondisi ini, _higher-order components_ unggul.
 
-We can write a function that creates components, like `CommentList` and `BlogPost`, that subscribe to `DataSource`. The function will accept as one of its arguments a child component that receives the subscribed data as a prop. Let's call the function `withSubscription`:
+Kita dapat menulis sebuah fungsi yang membuat komponen, seperti `CommentList` dan `BlogPost` yang berlangganan ke `DataSource`. Fungsi tersebut akan menerima salah satu argumennya ialah komponen turunan yang menerima data langganan sebagai _prop_s. Mari kita panggil fungsi `withSubscription`:
 
 ```js
 const CommentListWithSubscription = withSubscription(
@@ -122,9 +122,9 @@ const BlogPostWithSubscription = withSubscription(
 );
 ```
 
-The first parameter is the wrapped component. The second parameter retrieves the data we're interested in, given a `DataSource` and the current props.
+Parameter pertama ialah komponen yang terbungkus. Parameter kedua mengambil data yang kita inginkan, contohnya  ialah `DataSource` dan _props_ saat ini.
 
-When `CommentListWithSubscription` and `BlogPostWithSubscription` are rendered, `CommentList` and `BlogPost` will be passed a `data` prop with the most current data retrieved from `DataSource`:
+Saat `CommentListWithSubscription` dan `BlogPostWithSubscription` di-_render_, `CommentList` dan `BlogPost` akan dioper sebuah `data` _prop_ dengan data paling baru yang diperoleh dari `DataSource`:
 
 ```js
 // This function takes a component...
