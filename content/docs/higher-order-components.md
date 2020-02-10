@@ -165,7 +165,7 @@ function withSubscription(WrappedComponent, selectData) {
 
 Catat bahwa sebuah HOC tidak mengubah komponen _input_, tidak pula menggunakan _inheritance_ untuk menyalin perilakunya. Sebaliknya, sebuah HOC *menyusun* komponen asli dengan cara *membungkusnya* ke dalam sebuah _container_. Sebuah HOC merupakan fungsi murni bebas dari _side-effects_.
 
-And that's it! The wrapped component receives all the props of the container, along with a new prop, `data`, which it uses to render its output. The HOC isn't concerned with how or why the data is used, and the wrapped component isn't concerned with where the data came from.
+Dan jadilah! komponen yang terbungkus menerima semua _props_ dari _container_ sejalan dengan _prop_ baru, `data`, yang mana digunakan untuk me-_render_ keluaranya. HOC tidak memperhatikan dengan bagaimana data digunakan dan komponen yang terbungkus tidak memperhatikan dengan darimana data berasal.
 
 Because `withSubscription` is a normal function, you can add as many or as few arguments as you like. For example, you may want to make the name of the `data` prop configurable, to further isolate the HOC from the wrapped component. Or you could accept an argument that configures `shouldComponentUpdate`, or one that configures the data source. These are all possible because the HOC has full control over how the component is defined.
 
