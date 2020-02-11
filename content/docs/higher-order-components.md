@@ -211,7 +211,7 @@ function logProps(WrappedComponent) {
 }
 ```
 
-This HOC has the same functionality as the mutating version while avoiding the potential for clashes. It works equally well with class and function components. And because it's a pure function, it's composable with other HOCs, or even with itself.
+HOC memiliki fungsionalitas yang sama dengan versi mutasi sembari menghindari potensi bentrok. Hal itu berfungsi sama baiknya dengan kelas dan fungsional komponen. Dan karena merupakan fungsi murni, hal tersebut dapat disusun dengan komponen HOC lainnya, atau bahkan dengan komponen itu sendiri.
 
 You may have noticed similarities between HOCs and a pattern called **container components**. Container components are part of a strategy of separating responsibility between high-level and low-level concerns. Containers manage things like subscriptions and state, and pass props to components that handle things like rendering UI. HOCs use containers as part of their implementation. You can think of HOCs as parameterized container component definitions.
 
