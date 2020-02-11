@@ -165,15 +165,15 @@ function withSubscription(WrappedComponent, selectData) {
 
 Catat bahwa sebuah HOC tidak mengubah komponen _input_, tidak pula menggunakan _inheritance_ untuk menyalin perilakunya. Sebaliknya, sebuah HOC *menyusun* komponen asli dengan cara *membungkusnya* ke dalam sebuah _container_. Sebuah HOC merupakan fungsi murni bebas dari _side-effects_.
 
-Dan jadilah! komponen yang terbungkus menerima semua _props_ dari _container_ sejalan dengan _prop_ baru, `data`, yang mana digunakan untuk me-_render_ keluaranya. HOC tidak memperhatikan dengan bagaimana data digunakan dan komponen yang terbungkus tidak memperhatikan dengan darimana data berasal.
+Dan jadilah! komponen yang terbungkus menerima semua _props_ dari _container_ sejalan dengan _prop_ baru, `data`, yang mana digunakan untuk me-_render_ keluaranya. HOC tidak memperhatikan bagaimana data digunakan dan komponen yang terbungkus tidak memperhatikan darimana data berasal.
 
-Karena `withSubscription` merupakan fungsi normal, Anda dapat menambahkan seban˝yak atau pun sesedikit mungkin argumen yang anda inginkan. Contohnya, Anda ingin membuat nama dari `data` _props_ dapat diatur untuk nantinya mengisolasi HOC dari komponen yang terbungkus. Atau Anda dapat menerima sebuah˝ argumen yang mengatur `shouldComponentUpdate`, atau satu yang mengatur sumber data. Hal ini memungkinkan karena HOC memiliki kontrol penuh terhadap bagaimana komponen didefinisikan.
+Karena `withSubscription` merupakan fungsi normal, Anda dapat menambahkan sebanyak atau pun sesedikit mungkin argumen yang anda inginkan. Contohnya, Anda ingin membuat nama dari `data` _props_ dapat diatur untuk nantinya dapat mengisolasi HOC dari komponen yang terbungkus. Atau Anda dapat menerima sebuah argumen yang mengatur `shouldComponentUpdate`, atau satu yang mengatur sumber data. Hal ini memungkinkan karena HOC memiliki kontrol penuh terhadap bagaimana komponen didefinisikan.
 
-Like components, the contract between `withSubscription` and the wrapped component is entirely props-based. This makes it easy to swap one HOC for a different one, as long as they provide the same props to the wrapped component. This may be useful if you change data-fetching libraries, for example.
+Seperti komponen, kontrak antara `withSubscription` dan komponen yang terbungkus seluruhnya merupakan _props-based_. Hal ini memudahkan bertukar dari satu HOC ke yang lainnya, selama menyediakan _props_ yang sama ke komponen yang terbungkus. Hal ini berguna contohnya jika Anda mengubah pustaka _data-fetching_.
 
-## Don't Mutate the Original Component. Use Composition. {#dont-mutate-the-original-component-use-composition}
+## Jangan memutasi komponen asli. Gunakan _Composition_. {#dont-mutate-the-original-component-use-composition}
 
-Resist the temptation to modify a component's prototype (or otherwise mutate it) inside a HOC.
+Tahan godaan untuk memodifikasi prototipe komponen (jika tidak, lakukan mutasi) di dalam  HOC.
 
 ```js
 function logProps(InputComponent) {
@@ -190,11 +190,11 @@ function logProps(InputComponent) {
 const EnhancedComponent = logProps(InputComponent);
 ```
 
-There are a few problems with this. One is that the input component cannot be reused separately from the enhanced component. More crucially, if you apply another HOC to `EnhancedComponent` that *also* mutates `componentWillReceiveProps`, the first HOC's functionality will be overridden! This HOC also won't work with function components, which do not have lifecycle methods.
+Ada sedikit masalah dengan kode ini. Salah satunya ialah komponen masukan tidak dapat digunakan kembali secara terpisah dari komponen yang ditingkatkan. lebih petingnya lagi, jika Anda menerapkan HOC yang lain ke `EnhancedComponent` yang *juga* memutasi `componentWillReceiveProps`, fungsionalitas HOC pertama akan ditimpa! HOC ini juga tidak akan bekerja dengan fungsional komponen, yang mana tidak memiliki sikuls metode.
 
-Mutating HOCs are a leaky abstraction—the consumer must know how they are implemented in order to avoid conflicts with other HOCs.
+Mengubah HOC merupakan kebocoran abstraksi - pengguna harus mengerti bagaimana mereka diimplementasikan untuk menghindari konflik dengan HOC lainnya.
 
-Instead of mutation, HOCs should use composition, by wrapping the input component in a container component:
+Daripada mutasi, HOC seharusnya menggunakan _composition_, dengan membungkus komponen masukan ke dalam _container_ komponen:
 
 ```js
 function logProps(WrappedComponent) {
