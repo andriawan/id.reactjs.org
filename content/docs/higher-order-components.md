@@ -215,11 +215,11 @@ HOC memiliki fungsionalitas yang sama dengan versi mutasi sembari menghindari po
 
 Anda mungkin memperhatikan kemiripan antara HOC dan pola yang disebut *komponen container*. *Komponen container* merupakan bagian dari strategi pemisahan *responsibility* antara kepentingan *high-level* dan *low-level*. Container menangani hal seperti langganan dan *state*, dan mengoper ke komponen yang menangani hal seperti *rendering UI*. HOC menggunakan *container* sebagai bagian dari implementasinya. Anda dapat berfikir bahwa HOC merupakan *komponen container* terdefinisi yang berparameter.
 
-## Convention: Pass Unrelated Props Through to the Wrapped Component {#convention-pass-unrelated-props-through-to-the-wrapped-component}
+## Persetujuan: Oper _Props_ yang terkait melalui komponen yang dibungkus {#convention-pass-unrelated-props-through-to-the-wrapped-component}
 
-HOCs add features to a component. They shouldn't drastically alter its contract. It's expected that the component returned from a HOC has a similar interface to the wrapped component.
+HOC menambahkan fitur ke komponen. Mereka tidak seharusnya secara drastis mengubah kontraknya. Diharapkan bahwa komponen yang dikembalikan dari HOC memiliki antarmuka yang mirip dengan komponen yang dibungkus.
 
-HOCs should pass through props that are unrelated to its specific concern. Most HOCs contain a render method that looks something like this:
+HOC seharusnya mengoper melalui _props_ yang tidak terkait ke perhatian khususnya. Sebagian besar HOC berisi metode _render_ yang terlihat seperti ini:
 
 ```js
 render() {
