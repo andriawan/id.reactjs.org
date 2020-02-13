@@ -241,7 +241,7 @@ render() {
 }
 ```
 
-This convention helps ensure that HOCs are as flexible and reusable as possible.
+Persetujuan ini membantu memastikan bahwa HOC sebisa mungkin fleksibel dan dapat digunakan ulang.
 
 ## Convention: Maximizing Composability {#convention-maximizing-composability}
 
