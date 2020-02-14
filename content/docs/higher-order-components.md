@@ -243,28 +243,28 @@ render() {
 
 Persetujuan ini membantu memastikan bahwa HOC sebisa mungkin fleksibel dan dapat digunakan ulang.
 
-## Convention: Maximizing Composability {#convention-maximizing-composability}
+## Persetujuan: Maksimalkan _Composability_ {#convention-maximizing-composability}
 
-Not all HOCs look the same. Sometimes they accept only a single argument, the wrapped component:
+Tidak semua HOC terlihat sama. Terkadang mereka menerima hanya argumen tunggal, komponen yang dibungkus:
 
 ```js
 const NavbarWithRouter = withRouter(Navbar);
 ```
 
-Usually, HOCs accept additional arguments. In this example from Relay, a config object is used to specify a component's data dependencies:
+Biasanya, HOC menerima argumen tambahan. Dalam contoh dari Relay, _config_ obyek digunakan untuk menentukan sebuah ketergantungan data komponen:
 
 ```js
 const CommentWithRelay = Relay.createContainer(Comment, config);
 ```
 
-The most common signature for HOCs looks like this:
+Tanda tangan paling umum untuk HOC terlihat seperti ini:
 
 ```js
 // React Redux's `connect`
 const ConnectedComment = connect(commentSelector, commentActions)(CommentList);
 ```
 
-*What?!* If you break it apart, it's easier to see what's going on.
+*Bagaimana* jika Anda memecahnya? Akan lebih mudah untuk dilihat yang terjadi.
 
 ```js
 // connect is a function that returns another function
@@ -273,9 +273,9 @@ const enhance = connect(commentListSelector, commentListActions);
 // to the Redux store
 const ConnectedComment = enhance(CommentList);
 ```
-In other words, `connect` is a higher-order function that returns a higher-order component!
+Dengan kata lain, `connect` merupakan fungsi *higher-order* yang mengembalikan HOC!
 
-This form may seem confusing or unnecessary, but it has a useful property. Single-argument HOCs like the one returned by the `connect` function have the signature `Component => Component`. Functions whose output type is the same as its input type are really easy to compose together.
+Bentuk ini mungkin terlihat membingungkan atau tidak perlu, tapi itu merupakan properti yang berguna. HOC argumen tunggal seperti contoh di atas yang dikembalikan oleh fungsi `connect` memiliki tanda tangan `Component => Component`. Fungsi yang tipe keluarannya sama dengan masukannya sangat mudah untuk dibentuk bersama.
 
 ```js
 // Instead of doing this...
