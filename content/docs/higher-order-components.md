@@ -215,7 +215,7 @@ HOC memiliki fungsionalitas yang sama dengan versi mutasi sembari menghindari po
 
 Anda mungkin memperhatikan kemiripan antara HOC dan pola yang disebut *komponen container*. *Komponen container* merupakan bagian dari strategi pemisahan *responsibility* antara kepentingan *high-level* dan *low-level*. Container menangani hal seperti langganan dan *state*, dan mengoper ke komponen yang menangani hal seperti *rendering UI*. HOC menggunakan *container* sebagai bagian dari implementasinya. Anda dapat berfikir bahwa HOC merupakan *komponen container* terdefinisi yang berparameter.
 
-## Persetujuan: Oper _Props_ yang terkait melalui komponen yang dibungkus {#convention-pass-unrelated-props-through-to-the-wrapped-component}
+## Kesepakatan: Oper _Props_ yang terkait melalui komponen yang dibungkus {#convention-pass-unrelated-props-through-to-the-wrapped-component}
 
 HOC menambahkan fitur ke komponen. Mereka tidak seharusnya secara drastis mengubah kontraknya. Diharapkan bahwa komponen yang dikembalikan dari HOC memiliki antarmuka yang mirip dengan komponen yang dibungkus.
 
@@ -241,9 +241,9 @@ render() {
 }
 ```
 
-Persetujuan ini membantu memastikan bahwa HOC sebisa mungkin fleksibel dan dapat digunakan ulang.
+Kesepakatan ini membantu memastikan bahwa HOC sebisa mungkin fleksibel dan dapat digunakan ulang.
 
-## Persetujuan: Maksimalkan _Composability_ {#convention-maximizing-composability}
+## Kesepakatan: Maksimalkan _Composability_ {#convention-maximizing-composability}
 
 Tidak semua HOC terlihat sama. Terkadang mereka menerima hanya argumen tunggal, komponen yang dibungkus:
 
@@ -291,11 +291,11 @@ const enhance = compose(
 const EnhancedComponent = enhance(WrappedComponent)
 ```
 
-(This same property also allows `connect` and other enhancer-style HOCs to be used as decorators, an experimental JavaScript proposal.)
+(Properti yang sama ini juga mengizinkan `connect` dan _enhancer-style_ HOC lainnya untuk digunakan sebagai _decorators_, proposal JavaScript eksperimental).
 
-The `compose` utility function is provided by many third-party libraries including lodash (as [`lodash.flowRight`](https://lodash.com/docs/#flowRight)), [Redux](https://redux.js.org/api/compose), and [Ramda](https://ramdajs.com/docs/#compose).
+Fungsi utilitas `compose` disediakan oleh banyak pustaka pihak ketiga termasuk lodash (as [`lodash.flowRight`](https://lodash.com/docs/#flowRight)), [Redux](https://redux.js.org/api/compose), dan [Ramda](https://ramdajs.com/docs/#compose).
 
-## Convention: Wrap the Display Name for Easy Debugging {#convention-wrap-the-display-name-for-easy-debugging}
+## Kesepakatan: Bungkus Nama Tampilan untuk Kemudahan _Debugging_ {#convention-wrap-the-display-name-for-easy-debugging}
 
 The container components created by HOCs show up in the [React Developer Tools](https://github.com/facebook/react-devtools) like any other component. To ease debugging, choose a display name that communicates that it's the result of a HOC.
 
