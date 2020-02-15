@@ -378,7 +378,7 @@ function enhance(WrappedComponent) {
 }
 ```
 
-Another possible solution is to export the static method separately from the component itself.
+Solusi lainnya yang memungkinkan ialah mengekspor metode statis secara terpisah dari komponen itu sendiri.
 
 ```js
 // Instead of...
@@ -392,8 +392,8 @@ export { someFunction };
 import MyComponent, { someFunction } from './MyComponent.js';
 ```
 
-### Refs Aren't Passed Through {#refs-arent-passed-through}
+### Jangan mengoper _Ref_ {#refs-arent-passed-through}
 
-While the convention for higher-order components is to pass through all props to the wrapped component, this does not work for refs. That's because `ref` is not really a prop — like `key`, it's handled specially by React. If you add a ref to an element whose component is the result of a HOC, the ref refers to an instance of the outermost container component, not the wrapped component.
+Sementara kesepakatan untuk komponen HOC mengoper semua _props_ ke komponen yang dibungkus, hal ini tidak bekerja untuk *refs*. Hal di dikarenakan `ref` sebenarnya bukan *prop* — sama seperti `key`, hal itu ditangani secara khusus oleh React. Jika Anda menambahkan sebuah *ref* ke sebuah elemen yang mana komponen merupakan hasil dari sebuah HOC, *ref* merujuk ke sebuah *instance* dari komponen *container* paling luar, bukan komponen yang terbungkus.
 
-The solution for this problem is to use the `React.forwardRef` API (introduced with React 16.3). [Learn more about it in the forwarding refs section](/docs/forwarding-refs.html).
+Solusi dari masalah ini ialah dengan menggunakan `React.forwardRef` API (diperkenalkan di React 16.3). [ Pelajari lebih lanjut tentang ini pada bagian forwarding refs](/docs/forwarding-refs.html).
