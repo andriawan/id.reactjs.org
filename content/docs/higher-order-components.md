@@ -340,11 +340,11 @@ Sebagai gantinya, terapkan HOC di luar definisi komponen sehingga komponen terse
 
 Dalam kasus langka dimana Anda butuh menerapkan HOC secara dinamis, Anda dapat juga meletakannya di dalam metode pada *lifecycle* atau konstruktornya.
 
-### Static Methods Must Be Copied Over {#static-methods-must-be-copied-over}
+### Metode Statis Harus Disalin {#static-methods-must-be-copied-over}
 
-Sometimes it's useful to define a static method on a React component. For example, Relay containers expose a static method `getFragment` to facilitate the composition of GraphQL fragments.
+Terkadang berguna mendefinisikan metode statis dalam sebuah komponen React. Sebagai contoh, *container* Relay membuka metode statis `getFragment` untuk memfasilitasi komposisi dari GraphQL *fragments*.
 
-When you apply a HOC to a component, though, the original component is wrapped with a container component. That means the new component does not have any of the static methods of the original component.
+Saat Anda menerapkan HOC ke suatu komponen, komponen original dibungkus dengan komponen *container*. Ini berarti komponen baru tersebut tidak memiliki metode statis apapun dari komponen original.
 
 ```js
 // Define a static method
@@ -356,7 +356,7 @@ const EnhancedComponent = enhance(WrappedComponent);
 typeof EnhancedComponent.staticMethod === 'undefined' // true
 ```
 
-To solve this, you could copy the methods onto the container before returning it:
+Untuk menyelesaikan ini, Anda dapat menyalin metode ke dalam *container* sebelum mengembalikannya:
 
 ```js
 function enhance(WrappedComponent) {
@@ -367,7 +367,7 @@ function enhance(WrappedComponent) {
 }
 ```
 
-However, this requires you to know exactly which methods need to be copied. You can use [hoist-non-react-statics](https://github.com/mridgway/hoist-non-react-statics) to automatically copy all non-React static methods:
+Namun, Anda perlu benar-benar memahami metode mana yang perlu disalin. Anda dapat menggunakan [hoist-non-react-statics](https://github.com/mridgway/hoist-non-react-statics) untuk secara otomatis menyalin semua metode statis non-React:
 
 ```js
 import hoistNonReactStatic from 'hoist-non-react-statics';
