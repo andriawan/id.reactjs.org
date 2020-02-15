@@ -334,11 +334,11 @@ render() {
 }
 ```
 
-The problem here isn't just about performance — remounting a component causes the state of that component and all of its children to be lost.
+Masalah di sini bukan hanya soal kinerja - *remounting* sebuah komponen menyebabkan *state* komponen tersebut dan *children*-nya hilang.
 
-Instead, apply HOCs outside the component definition so that the resulting component is created only once. Then, its identity will be consistent across renders. This is usually what you want, anyway.
+Sebagai gantinya, terapkan HOC di luar definisi komponen sehingga komponen tersebut dibuat hanya sekali. Lalu, identitasnya akan konsisten terhadap _render_. Hal ini biasanya yang Anda inginkan.
 
-In those rare cases where you need to apply a HOC dynamically, you can also do it inside a component's lifecycle methods or its constructor.
+Dalam kasus langka dimana Anda butuh menerapkan HOC secara dinamis, Anda dapat juga meletakannya di dalam metode pada *lifecycle* atau konstruktornya.
 
 ### Static Methods Must Be Copied Over {#static-methods-must-be-copied-over}
 
