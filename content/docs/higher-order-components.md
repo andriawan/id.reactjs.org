@@ -264,7 +264,7 @@ Tanda tangan paling umum untuk HOC terlihat seperti ini:
 const ConnectedComment = connect(commentSelector, commentActions)(CommentList);
 ```
 
-*Bagaimana* jika Anda memecahnya? Akan lebih mudah untuk dilihat yang terjadi.
+*Bagaimana* jika Anda memecahnya? Akan lebih mudah untuk melihat apa yang terjadi.
 
 ```js
 // connect is a function that returns another function
@@ -297,9 +297,9 @@ Fungsi utilitas `compose` disediakan oleh banyak pustaka pihak ketiga termasuk l
 
 ## Kesepakatan: Bungkus Nama Tampilan untuk Kemudahan _Debugging_ {#convention-wrap-the-display-name-for-easy-debugging}
 
-The container components created by HOCs show up in the [React Developer Tools](https://github.com/facebook/react-devtools) like any other component. To ease debugging, choose a display name that communicates that it's the result of a HOC.
+Komponen *container* dibuat oleh HOC yang akan muncul di [React Developer Tools](https://github.com/facebook/react-devtools) seperti komponen lainnya. Untuk kemudah _debugging_, pilih nama tampilan yang berhubungan bahwa itu merupakan hasil dari HOC.
 
-The most common technique is to wrap the display name of the wrapped component. So if your higher-order component is named `withSubscription`, and the wrapped component's display name is `CommentList`, use the display name `WithSubscription(CommentList)`:
+Teknik paling umum ialah dengan membungkus nama tampilan dari komponen yang dibungkus. Jadi, jika nama HOC Anda `withSubscription`, dan nama tampilan komponen yang dibungkus ialah `CommentList`, gunakan nama tampilan `WithSubscription(CommentList)`:
 
 ```js
 function withSubscription(WrappedComponent) {
@@ -314,7 +314,7 @@ function getDisplayName(WrappedComponent) {
 ```
 
 
-## Caveats {#caveats}
+## Batasan {#caveats}
 
 Higher-order components come with a few caveats that aren't immediately obvious if you're new to React.
 
