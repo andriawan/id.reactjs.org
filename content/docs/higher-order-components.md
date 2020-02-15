@@ -18,7 +18,7 @@ HOCs umum di pakai pustaka pihak ketiga React, seperti Redux's [`connect`](https
 
 Pada dokumen ini, kita akan mendiskusikan mengapa _higher-order components_ bermanfaat dan bagaimana menulis _higher-order components_ anda sendiri.
 
-## Penggunaan HOCs untuk Cross-Cutting Concerns {#use-hocs-for-cross-cutting-concerns}
+## Penggunaan HOC untuk Cross-Cutting Concerns {#use-hocs-for-cross-cutting-concerns}
 
 > **Catatan**
 >
@@ -316,13 +316,13 @@ function getDisplayName(WrappedComponent) {
 
 ## Batasan {#caveats}
 
-Higher-order components come with a few caveats that aren't immediately obvious if you're new to React.
+Komponen HOC datang dengan beberapa batasan yang kurang jelas jika Anda baru menggunakan React.
 
-### Don't Use HOCs Inside the render Method {#dont-use-hocs-inside-the-render-method}
+### Jangan menggunakan HOC di dalam metode _render_ {#dont-use-hocs-inside-the-render-method}
 
-React's diffing algorithm (called reconciliation) uses component identity to determine whether it should update the existing subtree or throw it away and mount a new one. If the component returned from `render` is identical (`===`) to the component from the previous render, React recursively updates the subtree by diffing it with the new one. If they're not equal, the previous subtree is unmounted completely.
+Algoritma _React's diffing_ (disebut _reconciliation_) menggunakan identitas komponen untuk menentukan apakah subtree yang ada perlu diperbarui atau _mount_ yang baru. Jika komponen yang dikembalikan dari `render` sama (`===`) dengan _render_ komponen sebelumnya, React memperbarui subtree secara rekursif dengan membandingkan dengan yang baru. Jika tidak sama, subtree sebelumnya akan diganti seluruhnya.
 
-Normally, you shouldn't need to think about this. But it matters for HOCs because it means you can't apply a HOC to a component within the render method of a component:
+Normalnya, Anda tidak perlu memikirkan tentang ini. Namun itu penting bagi HOC karena itu berarti Anda tidak dapat menerapkan HOC ke komponen di dalam metode *render* dari sebuah komponen:
 
 ```js
 render() {
