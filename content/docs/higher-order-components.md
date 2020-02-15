@@ -12,13 +12,13 @@ Konkritnya, **_higher-order component_ merupakan fungsi yang mengambil sebuah ko
 const EnhancedComponent = higherOrderComponent(WrappedComponent);
 ```
 
-Sebaliknya saat sebuah komponen mengubah _props_ menjadi UI, _higher-order component_ mengubah sebuah komponen menjadi komponen yang lainnya.
+Sebaliknya saat sebuah komponen mengubah _props_ menjadi antar muka pengguna (UI), _higher-order component_ mengubah sebuah komponen menjadi komponen yang lainnya.
 
-HOCs umum di pakai pustaka pihak ketiga React, seperti Redux's [`connect`](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect) dan Relay's [`createFragmentContainer`](http://facebook.github.io/relay/docs/en/fragment-container.html).
+HOC umum dipakai oleh pustaka pihak ketiga React, seperti [`connect`](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect) milik Redux dan [`createFragmentContainer`](http://facebook.github.io/relay/docs/en/fragment-container.html) milik Relay.
 
 Pada dokumen ini, kita akan mendiskusikan mengapa _higher-order components_ bermanfaat dan bagaimana menulis _higher-order components_ anda sendiri.
 
-## Penggunaan HOC untuk Cross-Cutting Concerns {#use-hocs-for-cross-cutting-concerns}
+## Penggunaan HOC untuk *Cross-Cutting Concerns* {#use-hocs-for-cross-cutting-concerns}
 
 > **Catatan**
 >
@@ -34,23 +34,23 @@ class CommentList extends React.Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.state = {
-      // "DataSource" is some global data source
+      // "DataSource" merupakan data sumber global
       comments: DataSource.getComments()
     };
   }
 
   componentDidMount() {
-    // Subscribe to changes
+    // Berlangganan terhadap perubahan
     DataSource.addChangeListener(this.handleChange);
   }
 
   componentWillUnmount() {
-    // Clean up listener
+    // Membersihkan listener
     DataSource.removeChangeListener(this.handleChange);
   }
 
   handleChange() {
-    // Update component state whenever the data source changes
+    // Memperbarui *state* komponen pada saat sumber data berubah
     this.setState({
       comments: DataSource.getComments()
     });
@@ -102,13 +102,13 @@ class BlogPost extends React.Component {
 
 `CommentList` dan `BlogPost` tidaklah sama — Keduanya memanggil metode yang berbeda `DataSource`, dan keduanya me-_render_ keluaran yang berbeda. Namun, implementasinya kebanyakan sama:
 
-- Saat dilakukan _mount_, tambah _change listener_ ke `DataSource`.
-- Di dalam _listener_, panggil `setState` pada saat  sumber data berubah.
-- Saat dilakukan _unmount_, hapus _change listener_.
+- Saat dilakukan pemasangan, tambah _change listener_ ke `DataSource`.
+- Di dalam _listener_, panggil `setState` pada saat sumber data berubah.
+- Saat dilakukan pelepasan, hapus _change listener_.
 
 Anda dapat bayangkan bahwa dalam aplikasi berskala besar, pola yang sama pada proses berlangganan `DataSource` dan pemanggilan `setState` akan terjadi berulang kali. Kita ingin sebuah abstraksi yang mengizinkan kita mendefinisikan logika ini pada satu tempat dan membaginya antar komponen. Dalam kondisi ini, _higher-order components_ unggul.
 
-Kita dapat menulis sebuah fungsi yang membuat komponen, seperti `CommentList` dan `BlogPost` yang berlangganan ke `DataSource`. Fungsi tersebut akan menerima salah satu argumennya ialah komponen turunan yang menerima data langganan sebagai _prop_s. Mari kita panggil fungsi `withSubscription`:
+Kita dapat menulis sebuah fungsi yang dapat membuat komponen, seperti `CommentList` dan `BlogPost` yang berlangganan ke `DataSource`. Fungsi tersebut akan menerima salah satu argumennya ialah komponen turunan yang menerima data langganan sebagai _props_. Mari kita panggil fungsi `withSubscription`:
 
 ```js
 const CommentListWithSubscription = withSubscription(
@@ -127,9 +127,9 @@ Parameter pertama ialah komponen yang terbungkus. Parameter kedua mengambil data
 Saat `CommentListWithSubscription` dan `BlogPostWithSubscription` di-_render_, `CommentList` dan `BlogPost` akan dioper sebuah `data` _prop_ dengan data paling baru yang diperoleh dari `DataSource`:
 
 ```js
-// This function takes a component...
+// Fungsi ini mengambil sebuah komponen...
 function withSubscription(WrappedComponent, selectData) {
-  // ...and returns another component...
+  // ...dan mengembalikan komponen yang lain...
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -140,7 +140,7 @@ function withSubscription(WrappedComponent, selectData) {
     }
 
     componentDidMount() {
-      // ... that takes care of the subscription...
+      // ... menangani langganan...
       DataSource.addChangeListener(this.handleChange);
     }
 
@@ -155,15 +155,15 @@ function withSubscription(WrappedComponent, selectData) {
     }
 
     render() {
-      // ... and renders the wrapped component with the fresh data!
-      // Notice that we pass through any additional props
+      // ... dan me-*render* komponen yang terbungkus dengan data baru!
+      // Perhatikan bahwa kita mengoper *props* tambahan apapun
       return <WrappedComponent data={this.state.data} {...this.props} />;
     }
   };
 }
 ```
 
-Catat bahwa sebuah HOC tidak mengubah komponen _input_, tidak pula menggunakan _inheritance_ untuk menyalin perilakunya. Sebaliknya, sebuah HOC *menyusun* komponen asli dengan cara *membungkusnya* ke dalam sebuah _container_. Sebuah HOC merupakan fungsi murni bebas dari _side-effects_.
+Catat bahwa sebuah HOC tidak mengubah komponen masukan, tidak pula menggunakan _inheritance_ untuk menyalin perilakunya. Sebaliknya, sebuah HOC *menyusun* komponen asli dengan cara *membungkusnya* ke dalam sebuah _container_. Sebuah HOC merupakan fungsi murni bebas dari _side-effects_.
 
 Dan jadilah! komponen yang terbungkus menerima semua _props_ dari _container_ sejalan dengan _prop_ baru, `data`, yang mana digunakan untuk me-_render_ keluaranya. HOC tidak memperhatikan bagaimana data digunakan dan komponen yang terbungkus tidak memperhatikan darimana data berasal.
 
@@ -171,7 +171,7 @@ Karena `withSubscription` merupakan fungsi normal, Anda dapat menambahkan sebany
 
 Seperti komponen, kontrak antara `withSubscription` dan komponen yang terbungkus seluruhnya merupakan _props-based_. Hal ini memudahkan bertukar dari satu HOC ke yang lainnya, selama menyediakan _props_ yang sama ke komponen yang terbungkus. Hal ini berguna contohnya jika Anda mengubah pustaka _data-fetching_.
 
-## Jangan memutasi komponen asli. Gunakan _Composition_. {#dont-mutate-the-original-component-use-composition}
+## Jangan Memutasi Komponen Asli. Gunakan _Composition_. {#dont-mutate-the-original-component-use-composition}
 
 Tahan godaan untuk memodifikasi prototipe komponen (jika tidak, lakukan mutasi) di dalam  HOC.
 
@@ -181,12 +181,12 @@ function logProps(InputComponent) {
     console.log('Current props: ', this.props);
     console.log('Next props: ', nextProps);
   };
-  // The fact that we're returning the original input is a hint that it has
-  // been mutated.
+  // Fakta bahwa kita mengembalikan masukan original merupakan petunjuk bahwa hal itu 
+  // telah dimutasi
   return InputComponent;
 }
 
-// EnhancedComponent will log whenever props are received
+// EnhancedComponent akan melakukan log pada saat *props* diterima
 const EnhancedComponent = logProps(InputComponent);
 ```
 
@@ -204,7 +204,7 @@ function logProps(WrappedComponent) {
       console.log('Next props: ', nextProps);
     }
     render() {
-      // Wraps the input component in a container, without mutating it. Good!
+      // Bungkus komponen masukan dalam *container*, tanpa memutasinya. Bagus!
       return <WrappedComponent {...this.props} />;
     }
   }
@@ -213,9 +213,9 @@ function logProps(WrappedComponent) {
 
 HOC memiliki fungsionalitas yang sama dengan versi mutasi sembari menghindari potensi bentrok. Hal itu berfungsi sama baiknya dengan kelas dan fungsional komponen. Dan karena merupakan fungsi murni, hal tersebut dapat disusun dengan komponen HOC lainnya, atau bahkan dengan komponen itu sendiri.
 
-Anda mungkin memperhatikan kemiripan antara HOC dan pola yang disebut *komponen container*. *Komponen container* merupakan bagian dari strategi pemisahan *responsibility* antara kepentingan *high-level* dan *low-level*. Container menangani hal seperti langganan dan *state*, dan mengoper ke komponen yang menangani hal seperti *rendering UI*. HOC menggunakan *container* sebagai bagian dari implementasinya. Anda dapat berfikir bahwa HOC merupakan *komponen container* terdefinisi yang berparameter.
+Anda mungkin memperhatikan kemiripan antara HOC dan pola yang disebut *komponen container*. *Komponen container* merupakan bagian dari strategi pemisahan *responsibility* antara kepentingan *high-level* dan *low-level*. Container menangani hal seperti langganan dan *state*, dan mengoper ke komponen yang menangani hal seperti *rendering* antar muka pengguna(UI). HOC menggunakan *container* sebagai bagian dari implementasinya. Anda dapat berfikir bahwa HOC merupakan *komponen container* terdefinisi yang berparameter.
 
-## Kesepakatan: Oper _Props_ yang terkait melalui komponen yang dibungkus {#convention-pass-unrelated-props-through-to-the-wrapped-component}
+## Kesepakatan: Oper _Props_ yang Terkait Melalui Komponen yang Dibungkus {#convention-pass-unrelated-props-through-to-the-wrapped-component}
 
 HOC menambahkan fitur ke komponen. Mereka tidak seharusnya secara drastis mengubah kontraknya. Diharapkan bahwa komponen yang dikembalikan dari HOC memiliki antarmuka yang mirip dengan komponen yang dibungkus.
 
@@ -223,15 +223,15 @@ HOC seharusnya mengoper melalui _props_ yang tidak terkait ke perhatian khususny
 
 ```js
 render() {
-  // Filter out extra props that are specific to this HOC and shouldn't be
-  // passed through
+  // Menyaring *props* tambahan yang spesifik ke HOC ini dan semestinya tidak 
+  // dioper 
   const { extraProp, ...passThroughProps } = this.props;
 
-  // Inject props into the wrapped component. These are usually state values or
-  // instance methods.
+  // Masukan *props* kedalam komponen yang terbungkus. Biasanya nilai 
+  // metode *instance*
   const injectedProp = someStateOrInstanceMethod;
 
-  // Pass props to wrapped component
+  // Oper *props* ke komponen yang terbungkus
   return (
     <WrappedComponent
       injectedProp={injectedProp}
@@ -260,17 +260,17 @@ const CommentWithRelay = Relay.createContainer(Comment, config);
 Tanda tangan paling umum untuk HOC terlihat seperti ini:
 
 ```js
-// React Redux's `connect`
+//`connect` milik React Redux
 const ConnectedComment = connect(commentSelector, commentActions)(CommentList);
 ```
 
 *Bagaimana* jika Anda memecahnya? Akan lebih mudah untuk melihat apa yang terjadi.
 
 ```js
-// connect is a function that returns another function
+// connect merupakan sebuah fungsi yang mengembalikan fungsi lainnya
 const enhance = connect(commentListSelector, commentListActions);
-// The returned function is a HOC, which returns a component that is connected
-// to the Redux store
+// fungsi yang dikembalikan merupakan HOC, yang mengembalikan sebuah komponen terhubung dengan
+// Redux store
 const ConnectedComment = enhance(CommentList);
 ```
 Dengan kata lain, `connect` merupakan fungsi *higher-order* yang mengembalikan HOC!
@@ -278,13 +278,13 @@ Dengan kata lain, `connect` merupakan fungsi *higher-order* yang mengembalikan H
 Bentuk ini mungkin terlihat membingungkan atau tidak perlu, tapi itu merupakan properti yang berguna. HOC argumen tunggal seperti contoh di atas yang dikembalikan oleh fungsi `connect` memiliki tanda tangan `Component => Component`. Fungsi yang tipe keluarannya sama dengan masukannya sangat mudah untuk dibentuk bersama.
 
 ```js
-// Instead of doing this...
+// Daripada melakukan ini...
 const EnhancedComponent = withRouter(connect(commentSelector)(WrappedComponent))
 
-// ... you can use a function composition utility
-// compose(f, g, h) is the same as (...args) => f(g(h(...args)))
+// ... Anda dapat menggunakan fungsi utilitas *composition*
+// compose(f, g, h) sama dengan (...args) => f(g(h(...args)))
 const enhance = compose(
-  // These are both single-argument HOCs
+  // Keduanya merupakan HOC dengan argumen tunggal
   withRouter,
   connect(commentSelector)
 )
@@ -318,7 +318,7 @@ function getDisplayName(WrappedComponent) {
 
 Komponen HOC datang dengan beberapa batasan yang kurang jelas jika Anda baru menggunakan React.
 
-### Jangan menggunakan HOC di dalam metode _render_ {#dont-use-hocs-inside-the-render-method}
+### Jangan Menggunakan HOC di dalam Metode _render_ {#dont-use-hocs-inside-the-render-method}
 
 Algoritma _React's diffing_ (disebut _reconciliation_) menggunakan identitas komponen untuk menentukan apakah subtree yang ada perlu diperbarui atau _mount_ yang baru. Jika komponen yang dikembalikan dari `render` sama (`===`) dengan _render_ komponen sebelumnya, React memperbarui subtree secara rekursif dengan membandingkan dengan yang baru. Jika tidak sama, subtree sebelumnya akan diganti seluruhnya.
 
@@ -326,10 +326,10 @@ Normalnya, Anda tidak perlu memikirkan tentang ini. Namun itu penting bagi HOC k
 
 ```js
 render() {
-  // A new version of EnhancedComponent is created on every render
+  // Sebuah versi baru dari EnhancedComponent dibuat tiap *render*
   // EnhancedComponent1 !== EnhancedComponent2
   const EnhancedComponent = enhance(MyComponent);
-  // That causes the entire subtree to unmount/remount each time!
+  // Ini menyebabkan seluruh subtree lepas/kembali dipasang tiap waktu!
   return <EnhancedComponent />;
 }
 ```
@@ -347,12 +347,12 @@ Terkadang berguna mendefinisikan metode statis dalam sebuah komponen React. Seba
 Saat Anda menerapkan HOC ke suatu komponen, komponen original dibungkus dengan komponen *container*. Ini berarti komponen baru tersebut tidak memiliki metode statis apapun dari komponen original.
 
 ```js
-// Define a static method
+// Definisikan metode statis
 WrappedComponent.staticMethod = function() {/*...*/}
-// Now apply a HOC
+// Sekarang terapkan HOC
 const EnhancedComponent = enhance(WrappedComponent);
 
-// The enhanced component has no static method
+// Komponen yang ditingkatkan tidak memiliki metode statis
 typeof EnhancedComponent.staticMethod === 'undefined' // true
 ```
 
@@ -361,7 +361,7 @@ Untuk menyelesaikan ini, Anda dapat menyalin metode ke dalam *container* sebelum
 ```js
 function enhance(WrappedComponent) {
   class Enhance extends React.Component {/*...*/}
-  // Must know exactly which method(s) to copy :(
+  // Harus benar-benar paham metode yang mana yang akan disalin :(
   Enhance.staticMethod = WrappedComponent.staticMethod;
   return Enhance;
 }
@@ -381,19 +381,19 @@ function enhance(WrappedComponent) {
 Solusi lainnya yang memungkinkan ialah mengekspor metode statis secara terpisah dari komponen itu sendiri.
 
 ```js
-// Instead of...
+// Daripada...
 MyComponent.someFunction = someFunction;
 export default MyComponent;
 
-// ...export the method separately...
+// ...ekspor metode secara terpisah...
 export { someFunction };
 
-// ...and in the consuming module, import both
+// ...dan pada modul, impor keduanya
 import MyComponent, { someFunction } from './MyComponent.js';
 ```
 
 ### Jangan mengoper _Ref_ {#refs-arent-passed-through}
 
-Sementara kesepakatan untuk komponen HOC mengoper semua _props_ ke komponen yang dibungkus, hal ini tidak bekerja untuk *refs*. Hal di dikarenakan `ref` sebenarnya bukan *prop* — sama seperti `key`, hal itu ditangani secara khusus oleh React. Jika Anda menambahkan sebuah *ref* ke sebuah elemen yang mana komponen merupakan hasil dari sebuah HOC, *ref* merujuk ke sebuah *instance* dari komponen *container* paling luar, bukan komponen yang terbungkus.
+Sementara kesepakatan untuk komponen HOC mengoper semua _props_ ke komponen yang dibungkus, hal ini tidak bekerja untuk *refs*. Ini dikarenakan `ref` sebenarnya bukan *prop* — sama seperti `key`, hal itu ditangani secara khusus oleh React. Jika Anda menambahkan sebuah *ref* ke sebuah elemen yang mana komponen merupakan hasil dari sebuah HOC, *ref* merujuk ke sebuah *instance* dari komponen *container* paling luar, bukan komponen yang terbungkus.
 
 Solusi dari masalah ini ialah dengan menggunakan `React.forwardRef` API (diperkenalkan di React 16.3). [ Pelajari lebih lanjut tentang ini pada bagian forwarding refs](/docs/forwarding-refs.html).
